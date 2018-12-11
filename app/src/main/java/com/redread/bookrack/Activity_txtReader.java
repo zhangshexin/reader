@@ -53,7 +53,7 @@ public class Activity_txtReader extends AppCompatActivity {
     protected View mTopDecoration;
     protected View mBottomDecoration;
     protected TextView mChapterNameText;
-    protected TextView mChapterMenuText;
+    protected ImageView mChapterMenuText;
     protected TextView mProgressText;
     protected TextView mSettingText;
     protected TextView mSelectedText;
@@ -119,7 +119,7 @@ public class Activity_txtReader extends AppCompatActivity {
 
         //书名显示
         mChapterNameText.setText(FileName);
-        this.mChapterMenuText = (TextView)this.findViewById(R.id.activity_hwtxtplay_chapter_menutext);
+        this.mChapterMenuText = (ImageView)this.findViewById(R.id.chapterMenu);
         this.mProgressText = (TextView)this.findViewById(R.id.activity_hwtxtplay_progress_text);
         this.mSettingText = (TextView)this.findViewById(R.id.activity_hwtxtplay_setting_text);
         this.mTopMenu = this.findViewById(R.id.activity_hwtxtplay_menu_top);
