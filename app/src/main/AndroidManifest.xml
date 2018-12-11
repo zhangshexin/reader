@@ -36,7 +36,8 @@
         <activity
             android:name=".bookrack.Activity_txtReader"
             android:label="txt阅读页"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".setting.Activity_setting"
             android:label="设置"

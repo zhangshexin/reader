@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#000000"
+    android:background="#fff"
     android:orientation="horizontal"
     android:paddingBottom="13dp"
     android:paddingLeft="10dp"
@@ -13,7 +13,7 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:onClick="BackClick"
-        android:src="@drawable/ic_key_back" />
+        android:src="@drawable/back_black" />
 
     <TextView
         android:id="@+id/txtreadr_menu_title"

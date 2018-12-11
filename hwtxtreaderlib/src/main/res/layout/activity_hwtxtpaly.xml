@@ -7,8 +7,7 @@
         android:id="@+id/activity_hwtxtplay_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        >
+        android:background="#EFEFEF">
 
         <TextView
             android:id="@+id/activity_hwtxtplay_chaptername"
@@ -22,7 +21,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="第一章"
-            android:textColor="#666666" />
+            android:textColor="#A4A4A4" />
 
         <LinearLayout
             android:id="@+id/activity_hwtxtplay_chpatermenu"
@@ -31,7 +30,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <View
 
@@ -47,12 +47,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
                 android:clickable="true"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="章节"
-                android:textColor="#858582" />
+                android:textColor="#A4A4A4" />
         </LinearLayout>
 
 
@@ -64,23 +64,36 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/activity_hwtxtplay_bottom"
         android:layout_below="@+id/activity_hwtxtplay_top"
-        android:background="#ffffff" />
+        android:background="#EFEFEF" />
 
     <RelativeLayout
         android:id="@+id/activity_hwtxtplay_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff"
+        android:background="#EFEFEF"
         android:paddingTop="5dp">
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:format24Hour="HH:mm"
+            android:textColor="#A4A4A4"/>
+
 
         <TextView
             android:id="@+id/activity_hwtxtplay_progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="0%"
-            android:textColor="#666666" />
+            android:textColor="#A4A4A4" />
 
         <TextView
             android:id="@+id/activity_hwtxtplay_setting_text"
@@ -92,7 +105,8 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:text="设置"
-            android:textColor="#858582" />
+            android:textColor="#A4A4A4"
+            android:visibility="gone" />
     </RelativeLayout>
 
 
