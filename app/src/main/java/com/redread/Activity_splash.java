@@ -9,6 +9,9 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 
 import com.redread.base.BaseActivity;
 import com.redread.databinding.LayoutSplashBinding;
@@ -37,6 +40,9 @@ import okhttp3.Response;
 
 /**
  * Created by zhangshexin on 2018/8/31.
+ *
+ *
+ * 在没有引导图的情况下显示三行字的渐变效果
  */
 
 public class Activity_splash extends BaseActivity implements View.OnClickListener {
@@ -70,23 +76,56 @@ public class Activity_splash extends BaseActivity implements View.OnClickListene
                         e.printStackTrace();
                     }
                     break;
+                case 2:
+                    //执行显示几行字
+                    showText();
+                    break;
             }
         }
     };
 
+
+    private void showText(){
+        binding.splashImg.setVisibility(View.GONE);
+        binding.splashAlpha.setVisibility(View.VISIBLE);
+
+        //开始动画
+        Animation alpha1= AnimationUtils.loadAnimation(this,R.anim.gradualchange);
+        binding.alphaText1.setVisibility(View.VISIBLE);
+        binding.alphaText1.startAnimation(alpha1);
+
+        Animation alpha2= AnimationUtils.loadAnimation(this,R.anim.gradualchange);
+        alpha2.setStartOffset(1000);
+        binding.alphaText2.setVisibility(View.VISIBLE);
+        binding.alphaText2.startAnimation(alpha2);
+
+        Animation alpha3= AnimationUtils.loadAnimation(this,R.anim.gradualchange);
+        alpha3.setStartOffset(2000);
+        binding.alphaText3.setVisibility(View.VISIBLE);
+        binding.alphaText3.startAnimation(alpha3);
+
+        Animation alpha4= AnimationUtils.loadAnimation(this,R.anim.gradualchange);
+        alpha4.setStartOffset(3000);
+        binding.alphaText4.setVisibility(View.VISIBLE);
+        binding.alphaText4.startAnimation(alpha4);
+
+        mHandler.sendEmptyMessageDelayed(0, 4500);
+
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.layout_splash);
         binding.splashJump.setOnClickListener(this);
         binding.circleIndicator.setOnClickListener(this);
-        File splashFile = new File(Constant.picture + "/splash.jpg");
-        if (splashFile.exists()) {
-//            GlideUtils.glideLoader(Activity_splash.this, Constant.picture + "/splash.jpg", R.drawable.ad, R.drawable.ad, binding.splashImg);
-            GlideUtils.LoadImageWithSize(this, Constant.picture + "/splash.jpg", 800,1240, binding.splashImg);
-        } else {
-            GlideUtils.LoadImageWithLocation(this, R.drawable.ad, binding.splashImg);
-        }
+        //修改为从网格或不显示,显示那几行字
+//        File splashFile = new File(Constant.picture + "/splash.jpg");
+//        if (splashFile.exists()) {
+////            GlideUtils.glideLoader(Activity_splash.this, Constant.picture + "/splash.jpg", R.drawable.ad, R.drawable.ad, binding.splashImg);
+//            GlideUtils.LoadImageWithSize(this, Constant.picture + "/splash.jpg", 800,1240, binding.splashImg);
+//        } else {
+//            GlideUtils.LoadImageWithLocation(this, R.drawable.ad, binding.splashImg);
+//        }
         initDBData();
         loadSplashPic();
     }
@@ -95,42 +134,42 @@ public class Activity_splash extends BaseActivity implements View.OnClickListene
      * 下载启动图
      */
     private void loadSplashPic() {
-        Request request = new Request.Builder().url(Api.downUrl + "splash.jpg").build();
-        Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(request);
-        mCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                mHandler.sendEmptyMessageDelayed(0, 1000);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    File picDir = new File(Constant.picture);
-                    if (!picDir.isDirectory())
-                        picDir.mkdirs();
-                    File splashFile = new File(picDir, "splash.jpg");
-                    InputStream ins = response.body().byteStream();
-                    if(splashFile.exists() && ins.available() != splashFile.length()){
-                        splashFile.delete();
-                    }
-                    if (!splashFile.exists()) {
-                        FileOutputStream fos = new FileOutputStream(splashFile);
-                        byte[] buf = new byte[1024];
-                        int length;
-                        while ((length = ins.read(buf)) != -1) {
-                            fos.write(buf, 0, length);
-                        }
-                        fos.flush();
-                        ins.close();
-                        fos.close();
-                    }
-                    mHandler.sendEmptyMessageDelayed(1, 1000);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Request request = new Request.Builder().url(Api.downUrl + "splash.jpg").build();
+//        Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(request);
+//        mCall.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(2);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                try {
+//                    File picDir = new File(Constant.picture);
+//                    if (!picDir.isDirectory())
+//                        picDir.mkdirs();
+//                    File splashFile = new File(picDir, "splash.jpg");
+//                    InputStream ins = response.body().byteStream();
+//                    if(splashFile.exists() && ins.available() != splashFile.length()){
+//                        splashFile.delete();
+//                    }
+//                    if (!splashFile.exists()) {
+//                        FileOutputStream fos = new FileOutputStream(splashFile);
+//                        byte[] buf = new byte[1024];
+//                        int length;
+//                        while ((length = ins.read(buf)) != -1) {
+//                            fos.write(buf, 0, length);
+//                        }
+//                        fos.flush();
+//                        ins.close();
+//                        fos.close();
+//                    }
+//                    mHandler.sendEmptyMessageDelayed(1, 1000);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
 
