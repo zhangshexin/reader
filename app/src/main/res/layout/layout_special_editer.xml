@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/title"
+                layout="@layout/layout_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/specialEditTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="专题名"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+            <EditText
+                android:id="@+id/specialEditDes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="text"
+                android:text="专题描述"
+                app:layout_constraintEnd_toEndOf="@+id/specialEditTitle"
+                app:layout_constraintStart_toStartOf="@+id/specialEditTitle"
+                app:layout_constraintTop_toBottomOf="@+id/specialEditTitle" />
+
+            <EditText
+                android:id="@+id/specialEditTime"
+                android:layout_width="59dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="number"
+                android:text="考试时长"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/specialEditDes"
+                app:layout_constraintTop_toBottomOf="@+id/specialEditDes" />
+
+            <TextView
+                android:id="@+id/specialEditUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="分钟"
+                app:layout_constraintBottom_toBottomOf="@+id/specialEditTime"
+                app:layout_constraintStart_toEndOf="@+id/specialEditTime"
+                app:layout_constraintTop_toTopOf="@+id/specialEditTime" />
+
+            <ToggleButton
+                android:id="@+id/specialEditToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="false"
+                android:textOff="随机从专题库选题生成考题"
+                android:textOn="人工从专题库中选题生成考题"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/specialEditTime" />
+
+            <EditText
+                android:id="@+id/specialEditCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="marquee"
+                android:ems="10"
+                android:hint="考题数量，只有在人工选题是才会生效"
+                android:inputType="number"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/specialEditToggle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/specialEditToggle"
+                app:layout_constraintTop_toTopOf="@+id/specialEditToggle" />
+
+            <Button
+                android:id="@+id/specialToAddQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="创建考题"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/specialEditToggle" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/speicalQuestionList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/specialToAddQuestions"></android.support.v7.widget.RecyclerView>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

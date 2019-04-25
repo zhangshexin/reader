@@ -51,6 +51,14 @@ public class Api {
         return requestPost;
     }
 
+    public static Request specialListGet(Context mContext, HashMap params) {
+        String paramsStr = paramToString(params);
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, paramsStr);
+        Request requestPost = new Request.Builder().url(baseUrl + "/special/list").post(requestBody).build();
+        return requestPost;
+    }
+
     /**
      * 拼接参数
      *

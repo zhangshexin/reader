@@ -4,18 +4,34 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import com.alibaba.fastjson.JSONObject;
 import com.redread.MyApplication;
 import com.redread.R;
 import com.redread.base.BaseActivity;
 import com.redread.databinding.LayoutHomeBinding;
+import com.redread.kaoshi.adapter.Adapter_special;
+import com.redread.kaoshi.bean.Special;
 import com.redread.login.Activity_Login;
 import com.redread.model.entity.User;
 import com.redread.model.gen.UserDao;
+import com.redread.net.Api;
+import com.redread.net.OkHttpManager;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by zhangshexin on 2019/4/22.
@@ -25,6 +41,7 @@ import java.util.List;
  */
 
 public class Activity_specialList extends BaseActivity {
+    private String TAG=getClass().getName();
     private LayoutHomeBinding binding;
     private UserDao dao;
 
@@ -36,7 +53,8 @@ public class Activity_specialList extends BaseActivity {
         initView();
     }
 
-
+private Adapter_special adapter_special;
+    private List<Special> specialList= Collections.emptyList();
     private void initView() {
         binding.title.titleLeft.setVisibility(View.INVISIBLE);
         binding.userExit.setOnClickListener(new View.OnClickListener() {
@@ -48,6 +66,16 @@ public class Activity_specialList extends BaseActivity {
             }
         });
 
+        adapter_special=new Adapter_special(this,false,specialList);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        binding.specialList.setLayoutManager(layoutManager);
+        binding.specialList.setAdapter(adapter_special);
+        binding.loadMore.loadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadData();
+            }
+        });
     }
 
 
@@ -80,15 +108,73 @@ public class Activity_specialList extends BaseActivity {
         }
         binding.userPhone.setText(users.get(0).getPhone());
 
-        boolean isAdmin=users.get(0).getRole().equals("admin");
-        binding.userRole.setText(isAdmin? "管理员" : "普通用户");
+        boolean isAdmin = users.get(0).getRole().equals("admin");
+        binding.userRole.setText(isAdmin ? "管理员" : "普通用户");
 
         binding.title.titleTitle.setText(isAdmin ? "管理考试" : "考试");
 
         //展示管理员操作按钮
-        if(isAdmin){
-
+        if (isAdmin) {
+            //右上角"新增"按钮
+            binding.title.titleRight.setText("新增专题");
+            binding.title.titleRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(Activity_special_editer.class);
+                }
+            });
+        }else{
+            binding.title.titleRight.setVisibility(View.INVISIBLE);
         }
+        //加载数据
+        loadData();
+    }
+    private int currentPageNum=1;
+    private final int pageSize=30;
+    private int status=1;
+    private boolean isLoadingData=false;
+    private void loadData() {
+        if(isLoadingData)
+            return;
+        if(currentPageNum>1){
+            currentPageNum++;
+        }
+        isLoadingData=true;
+        HashMap<String,String> param=new HashMap<>();
+        param.put("pageNum",currentPageNum+"");
+        param.put("pageSize",pageSize+"");
+        param.put("status",status+"");
+        Request mRequest= Api.specialListGet(this,param);
+        Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(mRequest);
+        mCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(currentPageNum>1){
+                    currentPageNum--;
+                }
+                isLoadingData=false;
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json=response.body().string();
+                Log.e(TAG, "onResponse: "+json );
+                JSONObject jsonObject=JSONObject.parseObject(json);
+                if(jsonObject.getInteger("code")==200){
+                    JSONObject result=jsonObject.getJSONObject("result");
+                    List<Special> specials=JSONObject.parseArray(result.getString("list"),Special.class);
+                    if(specials.size()<pageSize)
+                        binding.loadMore.getRoot().setVisibility(View.GONE);
+                    specialList.addAll(specials);
+                    adapter_special.notifyDataSetChanged();
+                }else{
+                    if(currentPageNum>1){
+                        currentPageNum--;
+                    }
+                }
+                isLoadingData=false;
+            }
+        });
     }
 
     @Override
