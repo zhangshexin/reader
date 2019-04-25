@@ -14,11 +14,5 @@ import com.redread.databinding.LayoutSpecialEditerBinding;
  */
 
 public class Activity_examination_editer extends BaseActivity {
-    private LayoutSpecialEditerBinding binding;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_special_editer);
-    }
 }
