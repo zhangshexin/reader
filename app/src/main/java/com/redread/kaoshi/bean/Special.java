@@ -1,20 +1,22 @@
 package com.redread.kaoshi.bean;
 
+import android.databinding.BaseObservable;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Special implements Serializable{
-    private Integer id;
+public class Special extends BaseObservable implements Serializable{
+    private Integer id=0;
 
     private String specialName;
 
     private String specialDes;
 
-    private Integer testTime;
+    private String testTime;
 
-    private Integer count;
+    private String count;
 
-    private Integer status;
+    private String status="1";
 
     private Date createDate;
 
@@ -22,7 +24,7 @@ public class Special implements Serializable{
 
     private String questions;
 
-    private Integer type;
+    private boolean type;
 
     public Integer getId() {
         return id;
@@ -48,27 +50,27 @@ public class Special implements Serializable{
         this.specialDes = specialDes == null ? null : specialDes.trim();
     }
 
-    public Integer getTestTime() {
+    public String getTestTime() {
         return testTime;
     }
 
-    public void setTestTime(Integer testTime) {
+    public void setTestTime(String testTime) {
         this.testTime = testTime;
     }
 
-    public Integer getCount() {
+    public String getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(String count) {
         this.count = count;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -78,14 +80,19 @@ public class Special implements Serializable{
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+        if(createDate==null)
+            this.createDate=new Date();
     }
 
     public Date getUpdateDate() {
+
         return updateDate;
     }
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+        if(updateDate==null)
+            this.updateDate=new Date();
     }
 
     public String getQuestions() {
@@ -96,11 +103,17 @@ public class Special implements Serializable{
         this.questions = questions == null ? null : questions.trim();
     }
 
-    public Integer getType() {
+    public boolean getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(boolean type) {
         this.type = type;
+    }
+
+
+    @Override
+    public String toString() {
+        return "id="+getId()+"&specialName="+getSpecialName()+"&specialDes="+getSpecialDes()+"&testTime="+getTestTime()+"&count="+getCount()+"&status="+getStatus()+"&questions="+getQuestions()+"&type="+(type?1:0)+"&status="+status+"&createDate="+createDate+"&updateDate="+updateDate;
     }
 }

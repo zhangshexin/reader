@@ -3,6 +3,8 @@ package com.redread.kaoshi;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +24,10 @@ import com.redread.model.entity.User;
 import com.redread.model.gen.UserDao;
 import com.redread.net.Api;
 import com.redread.net.OkHttpManager;
+import com.redread.utils.SystemUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +45,7 @@ import okhttp3.Response;
  */
 
 public class Activity_specialList extends BaseActivity {
-    private String TAG=getClass().getName();
+    private String TAG = getClass().getName();
     private LayoutHomeBinding binding;
     private UserDao dao;
 
@@ -53,8 +57,9 @@ public class Activity_specialList extends BaseActivity {
         initView();
     }
 
-private Adapter_special adapter_special;
-    private List<Special> specialList= Collections.emptyList();
+    private Adapter_special adapter_special;
+    private List<Special> specialList = new ArrayList();
+
     private void initView() {
         binding.title.titleLeft.setVisibility(View.INVISIBLE);
         binding.userExit.setOnClickListener(new View.OnClickListener() {
@@ -66,14 +71,14 @@ private Adapter_special adapter_special;
             }
         });
 
-        adapter_special=new Adapter_special(this,false,specialList);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        adapter_special = new Adapter_special(this, SystemUtil.isAdamin(), specialList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.specialList.setLayoutManager(layoutManager);
         binding.specialList.setAdapter(adapter_special);
         binding.loadMore.loadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadData();
+                loadData(true);
             }
         });
     }
@@ -123,56 +128,74 @@ private Adapter_special adapter_special;
                     startActivity(Activity_special_editer.class);
                 }
             });
-        }else{
+        } else {
             binding.title.titleRight.setVisibility(View.INVISIBLE);
         }
         //加载数据
-        loadData();
+        loadData(false);
     }
-    private int currentPageNum=1;
-    private final int pageSize=30;
-    private int status=1;
-    private boolean isLoadingData=false;
-    private void loadData() {
-        if(isLoadingData)
+
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    binding.loadMore.getRoot().setVisibility(View.GONE);
+                    break;
+                case 1:
+                    adapter_special.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+    private int currentPageNum = 1;
+    private final int pageSize = 30;
+    private int status = 1;
+    private boolean isLoadingData = false;
+
+    private synchronized void loadData(boolean isLoadMore) {
+        if (isLoadingData)
             return;
-        if(currentPageNum>1){
+        isLoadingData = true;
+        if(!isLoadMore)
+        {
+            specialList.clear();
+            currentPageNum=1;
+        }
+        if (currentPageNum > 1) {
             currentPageNum++;
         }
-        isLoadingData=true;
-        HashMap<String,String> param=new HashMap<>();
-        param.put("pageNum",currentPageNum+"");
-        param.put("pageSize",pageSize+"");
-        param.put("status",status+"");
-        Request mRequest= Api.specialListGet(this,param);
+        Request mRequest = Api.specialListGet(this, currentPageNum, pageSize, status);
         Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(mRequest);
         mCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if(currentPageNum>1){
+                if (currentPageNum > 1) {
                     currentPageNum--;
                 }
-                isLoadingData=false;
+                isLoadingData = false;
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json=response.body().string();
-                Log.e(TAG, "onResponse: "+json );
-                JSONObject jsonObject=JSONObject.parseObject(json);
-                if(jsonObject.getInteger("code")==200){
-                    JSONObject result=jsonObject.getJSONObject("result");
-                    List<Special> specials=JSONObject.parseArray(result.getString("list"),Special.class);
-                    if(specials.size()<pageSize)
-                        binding.loadMore.getRoot().setVisibility(View.GONE);
+                String json = response.body().string();
+                Log.e(TAG, "onResponse: " + json);
+                JSONObject jsonObject = JSONObject.parseObject(json);
+                if (jsonObject.getInteger("code") == 200) {
+                    JSONObject result = jsonObject.getJSONObject("result");
+                    List<Special> specials = JSONObject.parseArray(result.getString("list"), Special.class);
+                    if (specials.size() < pageSize) {
+                        mHandler.sendEmptyMessage(0);
+                    }
                     specialList.addAll(specials);
-                    adapter_special.notifyDataSetChanged();
-                }else{
-                    if(currentPageNum>1){
+                    mHandler.sendEmptyMessage(1);
+                } else {
+                    if (currentPageNum > 1) {
                         currentPageNum--;
                     }
                 }
-                isLoadingData=false;
+                isLoadingData = false;
             }
         });
     }

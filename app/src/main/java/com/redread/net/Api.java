@@ -51,14 +51,64 @@ public class Api {
         return requestPost;
     }
 
-    public static Request specialListGet(Context mContext, HashMap params) {
-        String paramsStr = paramToString(params);
-        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+    /**
+     * 取专题列表
+     * @param mContext
+     * @param params
+     * @return
+     */
+    public static Request specialListGet(Context mContext, int pageNum,int pageSize,int status) {
+        Request request = new Request.Builder().url(baseUrl + "/special/list?pageNum="+pageNum+"&pageSize="+pageSize+"&status="+status).build();
+        return request;
+    }
+
+    /**
+     * 保存专题
+     * @param mContext
+     * @param params
+     * @return
+     */
+    public static Request saveSpecialPost(Context mContext, String paramsStr) {
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/json");
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, paramsStr);
-        Request requestPost = new Request.Builder().url(baseUrl + "/special/list").post(requestBody).build();
+        Request requestPost = new Request.Builder().url(baseUrl + "/special/save").post(requestBody).build();
         return requestPost;
     }
 
+    /**
+     * 根据id删除
+     * @param mContext
+     * @param ids
+     * @return
+     */
+    public static Request deleteSpecialByIdsPost(Context mContext, String ids) {
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, ids);
+        Request requestPost = new Request.Builder().url(baseUrl + "/special/deleteByIds").post(requestBody).build();
+        return requestPost;
+    }
+
+    /**
+     * 获取专题对应的所有考题
+     * @param mContext
+     * @param params
+     * @return
+     */
+    public static Request specialExaminationGet(Context mContext, int specialId) {
+        Request request = new Request.Builder().url(baseUrl + "/questions/all?specialId="+specialId).build();
+        return request;
+    }
+
+    /**
+     * 获取id对应的所有考题
+     * @param mContext
+     * @param params
+     * @return
+     */
+    public static Request examinationByIdsGet(Context mContext, String ids) {
+        Request request = new Request.Builder().url(baseUrl + "/questions/all?ids="+ids).build();
+        return request;
+    }
     /**
      * 拼接参数
      *
