@@ -106,9 +106,38 @@ public class Api {
      * @return
      */
     public static Request examinationByIdsGet(Context mContext, String ids) {
-        Request request = new Request.Builder().url(baseUrl + "/questions/all?ids="+ids).build();
+        Request request = new Request.Builder().url(baseUrl + "/questions/getIdsList?ids="+ids).build();
         return request;
     }
+
+
+    /**
+     * 保存考题
+     * @param mContext
+     * @param params
+     * @return
+     */
+    public static Request saveExaminationPost(Context mContext, String paramsStr) {
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/json");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, paramsStr);
+        Request requestPost = new Request.Builder().url(baseUrl + "/questions/save").post(requestBody).build();
+        return requestPost;
+    }
+
+
+    /**
+     * 根据id删除
+     * @param mContext
+     * @param ids
+     * @return
+     */
+    public static Request deleteExaminationByIdsPost(Context mContext, String ids) {
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, ids);
+        Request requestPost = new Request.Builder().url(baseUrl + "/questions/deleteByIds").post(requestBody).build();
+        return requestPost;
+    }
+
     /**
      * 拼接参数
      *

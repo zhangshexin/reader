@@ -99,7 +99,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/specialEditToggle"
                 app:layout_constraintTop_toBottomOf="@+id/specialEditToggle" />
-
+            <Button
+                android:id="@+id/specialQuestionsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="查看专题库所有考题" android:onClick="@{()->act.goQuestionList()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/specialEditCount" />
             <Button
                 android:id="@+id/specialToAddQuestions"
                 android:layout_width="match_parent"
@@ -107,7 +114,7 @@
                 android:text="创建考题" android:onClick="@{()->act.addNewQuestion()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/specialEditCount" />
+                app:layout_constraintTop_toBottomOf="@+id/specialQuestionsList" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/speicalQuestionList"

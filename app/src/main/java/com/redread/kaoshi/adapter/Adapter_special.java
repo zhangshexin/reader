@@ -57,7 +57,7 @@ public class Adapter_special extends BaseRecycelAdapter<BaseViewHolder> {
         title.setText(special.getSpecialName());
         TextView des = itemSpecialBinding.specialItemDes;
         des.setText(special.getSpecialDes());
-        if (isAdmin) {
+        if (!isAdmin) {
             itemSpecialBinding.specialItemEdiBtn.setVisibility(View.GONE);
         }
 

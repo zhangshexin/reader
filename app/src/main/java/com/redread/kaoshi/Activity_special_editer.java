@@ -22,8 +22,6 @@ import com.redread.net.OkHttpManager;
 import com.redread.utils.SystemUtil;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,18 +60,81 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
 
 
         adapter_examination = new Adapter_examination(this, SystemUtil.isAdamin(), questions);
+        adapter_examination.setIds(special.getQuestions());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.speicalQuestionList.setLayoutManager(layoutManager);
         binding.speicalQuestionList.setAdapter(adapter_examination);
+        if(special.getType()){
+            //true为人工
+            binding.specialQuestionsList.setText("查看专题库所有考题");
+            currentDataSourceIsRandom = false;
+        }else{
+            binding.specialQuestionsList.setText("查看专题库人工选题");
+            currentDataSourceIsRandom = true;
+        }
 
-        loadExaminationList(special.getType() ? special.getQuestions() : null, special.getId());
+        binding.specialEditToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter_examination.setAuto(!binding.specialEditToggle.isChecked());
+            }
+        });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void loadData(){
+        if(!currentDataSourceIsRandom){
+            if(special.getQuestions()!=null)
+                loadExaminationList(special.getQuestions(), special.getId());
+            else {
+                currentDataSourceIsRandom = false;
+                questions.clear();
+                mHandler.sendEmptyMessage(1);
+            }
+        }else{
+            loadExaminationList(null, special.getId());
+        }
+        adapter_examination.setAuto(currentDataSourceIsRandom);
+    }
+
+    /**
+     * 创建考题
+     */
     public void addNewQuestion() {
-        startActivity(Activity_examination_editer.class);
+        Questions questions=new Questions();
+        questions.setSpecialId(special.getId());
+        startActivity(Activity_examination_editer.class,"examination",questions);
+    }
+
+    /**
+     * 查看专题库所有考题
+     */
+    public void goQuestionList() {
+        if (currentDataSourceIsRandom) {
+            binding.specialQuestionsList.setText("查看专题库所有考题");
+            if(special.getQuestions()!=null)
+                loadExaminationList(special.getQuestions(), special.getId());
+            else {
+                currentDataSourceIsRandom = false;
+                questions.clear();
+                mHandler.sendEmptyMessage(1);
+            }
+        }else{
+            binding.specialQuestionsList.setText("查看专题库人工选题");
+            loadExaminationList(null, special.getId());
+        }
     }
 
     public void deleteSpecial(int id) {
+        if(dataIsLoading)
+            return;
+        dataIsLoading=true;
         String params = "ids=" + id;
         Request request = Api.deleteSpecialByIdsPost(this, params);
         Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(request);
@@ -102,6 +163,9 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
     }
 
     private List<Questions> questions = new ArrayList<>();
+    //如果是随机的数据源说明要加载全部数据，如果是人工的只显示选定的数据即可
+    private boolean currentDataSourceIsRandom = false;//默认是人工选择
+    private boolean dataIsLoading = false;
 
     /**
      * 如果是人工选题要加载选了的题，如果是随机的则显示所有题
@@ -109,12 +173,18 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
      * @param exaIds
      * @param specialId
      */
-    private void loadExaminationList(String exaIds, int specialId) {
+    private synchronized void loadExaminationList(String exaIds, int specialId) {
+        if (dataIsLoading)
+            return;
+        dataIsLoading = true;
         Request request;
-        if (exaIds != null)
+        if (exaIds != null) {
+            currentDataSourceIsRandom = false;
             request = Api.examinationByIdsGet(this, exaIds);
-        else
+        } else {
+            currentDataSourceIsRandom = true;
             request = Api.specialExaminationGet(this, specialId);
+        }
         Call mCall = OkHttpManager.getInstance(this).getmOkHttpClient().newCall(request);
         mCall.enqueue(new Callback() {
             @Override
@@ -131,7 +201,7 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
                     if (jsonObject.getInteger("code") == 200) {
                         //展示考题
                         questions.clear();
-                        questions .addAll(JSONObject.parseArray(jsonObject.getString("result"), Questions.class));
+                        questions.addAll(JSONObject.parseArray(jsonObject.getString("result"), Questions.class));
                         mHandler.sendEmptyMessage(1);
                     } else
                         mHandler.sendEmptyMessage(0);
@@ -158,19 +228,26 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            dataIsLoading = false;
             switch (msg.what) {
                 case 0:
                     showToast("失败");
                     break;
                 case 1:
+                case 2:
                     showToast("成功");
-                    adapter_examination.notifyDataSetChanged();
+                    if(msg.what==1)
+                        adapter_examination.notifyDataSetChanged();
                     break;
             }
         }
     };
 
     private void save() {
+        if(dataIsLoading)
+            return;
+        dataIsLoading=true;
+        special.setQuestions(adapter_examination.getIds());
         Map<String, Object> params = (Map<String, Object>) JSONObject.parse(JSONObject.toJSONString(special));
         params.put("type", (Boolean) params.get("type") ? 1 : 0);
         Request request = Api.saveSpecialPost(this, JSONObject.toJSONString(params));
@@ -190,6 +267,8 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
                     if (jsonObject.getInteger("code") == 200) {
                         if (special.getId() == 0)
                             finish2();
+                        else
+                            mHandler.sendEmptyMessage(2);
                     } else
                         mHandler.sendEmptyMessage(0);
                 } catch (Exception e) {

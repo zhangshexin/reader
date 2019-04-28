@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 
 public class BaseActivity extends AppCompatActivity {
-
+    public String TAG=getClass().getName();
     public void finish2(){
         finish();
     }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="question"
+            type="com.redread.kaoshi.bean.Questions" />
+
+        <variable
+            name="act"
+            type="com.redread.kaoshi.Activity_examination_editer" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/title"
+            layout="@layout/layout_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/examinationEdiQuestionDes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择与填空的地方要用方括号标示，如中国最大的城市是【】市"
+            android:textColor="@color/nb.read.bg_3"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <EditText
+            android:id="@+id/examinationEdiQuestion"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@={question.question}"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/examinationEdiQuestionDes" />
+
+        <TextView
+            android:id="@+id/examinationEdiAnskDes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="答案，json形式,例：选择题：[“a”,”c”]填空题[“中国”,”上海”]"
+            android:textColor="@color/nb.read.bg_3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/examinationEdiQuestion" />
+
+        <EditText
+            android:id="@+id/examinationEdiAnsk"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@={question.answer}"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/examinationEdiAnskDes" />
+
+        <RadioGroup
+            android:id="@+id/examinationEdiType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/examinationEdiAnsk">
+
+            <RadioButton
+                android:id="@+id/examinationTypeSelect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{question.type==1?true:false}"
+                android:text="选择" />
+
+            <RadioButton
+                android:id="@+id/examinationTypeAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{question.type==2?true:false}"
+                android:text="填空" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/examinationEdiDelet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="31dp"
+            android:onClick="@{()->act.deleteExamination()}"
+            android:text="删除本题"
+            android:textSize="12sp"
+            android:visibility="@{question.id>0?View.VISIBLE:View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/examinationEdiType" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

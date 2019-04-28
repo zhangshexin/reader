@@ -43,8 +43,13 @@
             android:id="@+id/specialItemEdiBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
             android:onClick="@{()->adapter.editSpecial(position)}"
             android:text="修改"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/specialItemDes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/specialItemTitle" />
     </android.support.constraint.ConstraintLayout>
 </layout>

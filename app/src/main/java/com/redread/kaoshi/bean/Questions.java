@@ -4,7 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Questions implements Serializable{
-    private Integer id;
+    private boolean checked;
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    private Integer id=0;
 
     private Integer specialId;
 
@@ -12,13 +22,13 @@ public class Questions implements Serializable{
 
     private String answer;
 
-    private Integer status;
+    private Integer status=1;
 
-    private Date createDate;
+    private Date createDate=new Date();
 
-    private Date updateDate;
+    private Date updateDate=new Date();
 
-    private Integer type;
+    private Integer type=1;
 
     public Integer getId() {
         return id;
