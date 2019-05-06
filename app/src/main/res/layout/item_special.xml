@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="title"
-            android:textSize="18sp"
+            android:textSize="18sp" android:onClick="@{()->adapter.startExamination(position)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="3"
-            android:text="描述"
+            android:text="描述"  android:onClick="@{()->adapter.startExamination(position)}"
             app:layout_constraintEnd_toEndOf="@+id/specialItemTitle"
             app:layout_constraintStart_toStartOf="@+id/specialItemTitle"
             app:layout_constraintTop_toBottomOf="@+id/specialItemTitle" />

@@ -144,6 +144,7 @@ public class Activity_specialList extends BaseActivity {
                     binding.loadMore.getRoot().setVisibility(View.GONE);
                     break;
                 case 1:
+                    adapter_special.setAdmin(SystemUtil.isAdamin());
                     adapter_special.notifyDataSetChanged();
                     break;
             }

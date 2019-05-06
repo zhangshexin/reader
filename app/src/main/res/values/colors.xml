@@ -32,4 +32,6 @@
     <color name="unclick">#CCCCCC</color>
 
     <color name="background">#efefef</color>
+
+    <color name="gray_e0e0e0">#e0e0e0</color>
 </resources>

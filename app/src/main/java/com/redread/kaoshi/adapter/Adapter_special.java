@@ -11,6 +11,7 @@ import com.redread.R;
 import com.redread.base.BaseRecycelAdapter;
 import com.redread.base.BaseViewHolder;
 import com.redread.databinding.ItemSpecialBinding;
+import com.redread.kaoshi.Activity_examination;
 import com.redread.kaoshi.Activity_special_editer;
 import com.redread.kaoshi.bean.Special;
 
@@ -29,9 +30,13 @@ public class Adapter_special extends BaseRecycelAdapter<BaseViewHolder> {
 
     public Adapter_special(Context context, boolean isAdmin, List<Special> specials) {
         super(context);
-        this.mContext=context;
+        this.mContext = context;
         this.isAdmin = isAdmin;
         this.specials = specials;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     @Override
@@ -59,14 +64,24 @@ public class Adapter_special extends BaseRecycelAdapter<BaseViewHolder> {
         des.setText(special.getSpecialDes());
         if (!isAdmin) {
             itemSpecialBinding.specialItemEdiBtn.setVisibility(View.GONE);
+        } else {
+            itemSpecialBinding.specialItemEdiBtn.setVisibility(View.VISIBLE);
         }
 
     }
 
     public void editSpecial(int position) {
         //跳转到编页
-        Intent goEditSpecial=new Intent(mContext, Activity_special_editer.class);
-        goEditSpecial.putExtra("special",specials.get(position));
+        Intent goEditSpecial = new Intent(mContext, Activity_special_editer.class);
+        goEditSpecial.putExtra("special", specials.get(position));
         mContext.startActivity(goEditSpecial);
+    }
+
+    public void startExamination(int position) {
+        if (!isAdmin) {//非管理员去考试
+            Intent goEditSpecial = new Intent(mContext, Activity_examination.class);
+            goEditSpecial.putExtra("special", specials.get(position));
+            mContext.startActivity(goEditSpecial);
+        }
     }
 }

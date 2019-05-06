@@ -4,6 +4,26 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Questions implements Serializable{
+    //--------------新填本地用的字段-------start-----
+    private boolean did=false;//是否作过了
+    private int rightOrWrong=0;//如果打对了是1，答错了是0，不答默认为0
+
+    public boolean isDid() {
+        return did;
+    }
+
+    public void setDid(boolean did) {
+        this.did = did;
+    }
+
+    public int getRightOrWrong() {
+        return rightOrWrong;
+    }
+
+    public void setRightOrWrong(int rightOrWrong) {
+        this.rightOrWrong = rightOrWrong;
+    }
+
     private boolean checked;
 
     public boolean isChecked() {
@@ -13,14 +33,14 @@ public class Questions implements Serializable{
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
-
+    //-------end-----
     private Integer id=0;
 
     private Integer specialId;
 
     private String question;
 
-    private String answer;
+    private String answer;//答案，json形式,例：{“all”:”a,bbbb,ddd,ddd”,”right”:”a”},all对应所有给出的答案，right对应正确答案（可有多个），都以逗号隔开
 
     private Integer status=1;
 

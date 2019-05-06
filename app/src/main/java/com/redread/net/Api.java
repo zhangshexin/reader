@@ -19,7 +19,7 @@ import okhttp3.RequestBody;
  */
 
 public class Api {
-    public static final String baseUrl = "http://172.16.47.121:8080";
+    public static final String baseUrl = "http://172.16.47.121:8080";//这里填服务器的地址，不要用localhost或127.0.0.1
 
     /**
      * 普通登录
@@ -111,6 +111,19 @@ public class Api {
     }
 
 
+
+    /**
+     * 返回对应专题的指定随机个数的考题
+     * @param mContext
+     * @param specialId
+     * @param count
+     * @return
+     */
+    public static Request examinationRandomIdsGet(Context mContext, int specialId,String count) {
+        Request request = new Request.Builder().url(baseUrl + "/questions/random?specialId="+specialId+"&count="+count).build();
+        return request;
+    }
+
     /**
      * 保存考题
      * @param mContext
@@ -137,6 +150,33 @@ public class Api {
         Request requestPost = new Request.Builder().url(baseUrl + "/questions/deleteByIds").post(requestBody).build();
         return requestPost;
     }
+
+
+    /**
+     * 获取用户的成绩，及排名
+     * @param mContext
+     * @param userId
+     * @param specialId
+     * @return
+     */
+    public static Request gradeAndRankGet(Context mContext,long userId, int specialId,int top) {
+        Request request = new Request.Builder().url(baseUrl + "/grade/"+userId+"/"+specialId+"/"+top).build();
+        return request;
+    }
+
+    /**
+     * 更新用户成绩
+     * @param mContext
+     * @param id
+     * @return
+     */
+    public static Request updateGradeByIdPost(Context mContext, long id,int grade) {
+        MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, "userId="+id+"&grade="+grade);
+        Request requestPost = new Request.Builder().url(baseUrl + "/grade/saveOrUpdate").post(requestBody).build();
+        return requestPost;
+    }
+
 
     /**
      * 拼接参数

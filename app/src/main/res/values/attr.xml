@@ -3,4 +3,8 @@
     <declare-styleable name="CircleTextProgressbar">
         <attr name="in_circle_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="FlowLayout">
+        <attr name="lineSpacing" format="dimension"/>
+    </declare-styleable>
 </resources>

@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="答案，json形式,例：选择题：[“a”,”c”]填空题[“中国”,”上海”]"
+            android:text="答案，json形式,例：{“all”:”a,bbbb,ddd,ddd”,”right”:”a”},all对应所有给出的答案，right对应正确答案（可有多个），都以逗号隔开"
             android:textColor="@color/nb.read.bg_3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/examinationEdiQuestion" />

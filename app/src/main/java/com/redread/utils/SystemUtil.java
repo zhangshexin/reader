@@ -33,4 +33,12 @@ public class SystemUtil {
         return user.get(0).getRole().equals("admin");
 
     }
+
+    public static User getUser() {
+        UserDao dao = MyApplication.getInstances().getDaoSession().getUserDao();
+        List<User> user = dao.loadAll();
+        if(user.size()>0)
+            return user.get(0);
+        return null;
+    }
 }
