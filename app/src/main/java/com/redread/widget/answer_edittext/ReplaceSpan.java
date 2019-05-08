@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ReplacementSpan;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import android.widget.TextView;
  * 自定义的Span,用来绘制填空题
  */
 public class ReplaceSpan extends ReplacementSpan {
-
+    private String TAG=getClass().getName();
     public static interface OnClick{
         void OnClick(TextView v, int id, ReplaceSpan span);
     }
@@ -48,6 +49,8 @@ public class ReplaceSpan extends ReplacementSpan {
 
     @Override
     public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+
+        Log.e(TAG, "-----------------getSize: " );
         //将返回相对于Paint画笔的文本 50== 左右两边增加的空余长度
         if (mWidth == 0)mWidth = (int) paint.measureText(mWidthStr, 0, mWidthStr.length())+50;
         return mWidth;
@@ -55,6 +58,7 @@ public class ReplaceSpan extends ReplacementSpan {
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
+        Log.e(TAG, "-----------------draw: " );
         //填入对应单词
         if (!TextUtils.isEmpty(mText)){
             int width = (int)paint.measureText(mText,0,mText.length());

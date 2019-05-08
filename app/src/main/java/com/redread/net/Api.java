@@ -170,9 +170,9 @@ public class Api {
      * @param id
      * @return
      */
-    public static Request updateGradeByIdPost(Context mContext, long id,int grade) {
+    public static Request updateGradeByIdPost(Context mContext, long id,int specialId,int grade) {
         MediaType MEDIA_TYPE_NORAML_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, "userId="+id+"&grade="+grade);
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_NORAML_FORM, "userId="+id+"&specialId="+specialId+"&grade="+grade);
         Request requestPost = new Request.Builder().url(baseUrl + "/grade/saveOrUpdate").post(requestBody).build();
         return requestPost;
     }

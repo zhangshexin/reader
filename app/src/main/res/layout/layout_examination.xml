@@ -178,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{`历史分数：`+grade.grade}"
+                android:text="@{`历史分数：`+(grade.grade==null?`你还没有成绩`:grade.grade)}"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="专题排行榜前10"
+                android:text="-------专题排行榜前10-----------"
                 app:layout_constraintStart_toStartOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -197,6 +197,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginLeft="20dp"
                 android:text="@{topTen}"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView9"

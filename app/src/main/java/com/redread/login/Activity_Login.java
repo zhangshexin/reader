@@ -155,6 +155,7 @@ public class Activity_Login extends BaseActivity implements View.OnClickListener
                     //记录用户信息
                     User user = new User();
                     JSONObject result = jsonObject.getJSONObject("result");
+                    user.setId(result.getInteger("id"));
                     user.setPhone(result.getString("phoneNumber"));
                     user.setRole(result.getString("role"));
                     user.setName("哈小子");

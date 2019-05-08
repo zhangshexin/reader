@@ -31,7 +31,7 @@
             android:id="@+id/examinationEdiQuestionDes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="选择与填空的地方要用方括号标示，如中国最大的城市是【】市"
+            android:text="选择与填空的地方要用方括号标示，如中国最大的城市是【aaaa】市,其中的【】为标识要填的位置，aaaa个数为答案长度替代字符，如不按规则编题无法正常显示"
             android:textColor="@color/nb.read.bg_3"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"

@@ -64,7 +64,7 @@ public class Activity_examination extends BaseActivity {
 
         special = (Special) getIntent().getSerializableExtra("special");
 
-        examinationTime = Long.parseLong(special.getTestTime());
+        examinationTime = Long.parseLong(special.getTestTime())*60;
 
         binding.setSpecial(special);
         //取当前的成绩，排名，前10名
@@ -86,7 +86,7 @@ public class Activity_examination extends BaseActivity {
                         List<Grade> topN = grade.getTopN();
                         String top = "";
                         for (int i = 0; i < topN.size(); i++) {
-                            top = top + "第" + (i + 1) + "名分数为【" + topN.get(i).getGrade() + "】手机号为【" + topN.get(i).getPhoneNum() + "】\n";
+                            top = top + "第" + (i + 1) + "名分数为【" + topN.get(i).getGrade() + "】手机号为【" + (topN.get(i).getPhoneNum().equals(SystemUtil.getUser().getPhone())?"我":topN.get(i).getPhoneNum()) + "】\n";
                         }
                         if (TextUtils.isEmpty(top))
                             top = "暂时没有排名";
@@ -155,6 +155,7 @@ public class Activity_examination extends BaseActivity {
                     JSONObject jsonObject = JSONObject.parseObject(json);
                     if (jsonObject.getInteger("code") == 200) {
                         questionsList = JSONObject.parseArray(jsonObject.getString("result"), Questions.class);
+                        dataIsLoading=false;
                     } else {
                         mHandler.sendEmptyMessage(0);
                     }
@@ -241,17 +242,16 @@ public class Activity_examination extends BaseActivity {
      * 下一题或着是交卷
      */
     public void nextExamination(int position) {
+        //标记为已作
+        questionsList.get(position).setDid(true);
+        //判分
+        int realPosition=position%3;
+        questionsList.get(position).setRightOrWrong(examinations.get(realPosition).estimateGrade());
+        //下一题
         if (position >= questionsList.size() - 1) {
             //该提交考卷了
             submitGrade();
         } else{
-
-            //标记为已作
-            questionsList.get(position).setDid(true);
-            //判分
-            int realPosition=position%3;
-            questionsList.get(position).setRightOrWrong(examinations.get(realPosition).estimateGrade());
-            //下一题
             binding.examinationContainer.setCurrentItem(position+1, true);
         }
     }
@@ -269,7 +269,7 @@ public class Activity_examination extends BaseActivity {
              ) {
             grade+=qu.getRightOrWrong();
         }
-        Request request=Api.updateGradeByIdPost(this,user.getId(),grade);
+        Request request=Api.updateGradeByIdPost(this,user.getId(),special.getId(),grade);
         Call mCall=OkHttpManager.getInstance(this).getmOkHttpClient().newCall(request);
         mCall.enqueue(new Callback() {
             @Override
@@ -289,7 +289,7 @@ public class Activity_examination extends BaseActivity {
                  }else{
                      mHandler.sendEmptyMessage(0);
                  }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     mHandler.sendEmptyMessage(0);
                 }
@@ -322,7 +322,8 @@ public class Activity_examination extends BaseActivity {
 
     //考试结束
     private void completeExamination() {
-
+        //该提交考卷了
+        submitGrade();
     }
 
     private void startTime() {
