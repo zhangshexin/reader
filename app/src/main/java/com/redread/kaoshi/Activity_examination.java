@@ -15,6 +15,7 @@ import com.redread.R;
 import com.redread.base.BaseActivity;
 import com.redread.databinding.LayoutExaminationBinding;
 import com.redread.kaoshi.adapter.Adapter_fragmentExamination;
+import com.redread.kaoshi.adapter.FragmentPagerAdapter;
 import com.redread.kaoshi.bean.Grade;
 import com.redread.kaoshi.bean.Questions;
 import com.redread.kaoshi.bean.Special;
@@ -245,7 +246,7 @@ public class Activity_examination extends BaseActivity {
         //标记为已作
         questionsList.get(position).setDid(true);
         //判分
-        int realPosition=position%3;
+        int realPosition=position% FragmentPagerAdapter.recycelCount;
         questionsList.get(position).setRightOrWrong(examinations.get(realPosition).estimateGrade());
         //下一题
         if (position >= questionsList.size() - 1) {

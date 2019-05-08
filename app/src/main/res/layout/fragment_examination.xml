@@ -70,16 +70,18 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
-                android:textSize="17sp" android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
             <EditText
                 android:id="@+id/fragmentExaminationQuesEdi"
                 android:layout_width="wrap_content"
-                android:background="@android:color/transparent"
-                android:clickable="true"  android:textColor="@color/black"
-                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:textSize="17sp"/>
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
         </RelativeLayout>
         <!--只有选择题时才用这个,现在最多支持四个选项-->
         <android.support.constraint.ConstraintLayout
@@ -163,5 +165,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragmentExaminationAnswers" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp" android:text="@{`第`+(positon+1)+`题`}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentExaminationNexBtn" />
     </android.support.constraint.ConstraintLayout>
 </layout>
