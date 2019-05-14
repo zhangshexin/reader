@@ -30,6 +30,8 @@ public class SystemUtil {
     public static boolean isAdamin() {
         UserDao dao = MyApplication.getInstances().getDaoSession().getUserDao();
         List<User> user = dao.loadAll();
+        if(user==null||user.size()==0)
+            return false;
         return user.get(0).getRole().equals("admin");
 
     }

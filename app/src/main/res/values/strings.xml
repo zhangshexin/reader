@@ -34,4 +34,13 @@
     <string name="net_notify_success">我们收到了！</string>
     <string name="net_service_fail">服务器离家出走了，稍后再试！</string>
 
+    <!--集中替换-->
+    <string name="str_current_grade">你当前成绩为:</string>
+    <string name="str_current_rank">当前排名为:</string>
+    <string name="str_test_time">考试时长：</string>
+    <string name="str_test_time_unit">分钟</string>
+    <string name="str_rank_history">历史排名:</string>
+    <string name="str_grade_history">历史分数：</string>
+    <string name="str_grade_null">你还没有成绩</string>
+
 </resources>
