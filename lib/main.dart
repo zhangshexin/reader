@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chianEducation/Rout.dart';
+import 'package:chianEducation/AppRoutes.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         primarySwatch: Colors.blue
       ),
-      routes: Rout.getRoutes(),
+      routes: AppRoutes.getRoutes(),
     );
   }
 }

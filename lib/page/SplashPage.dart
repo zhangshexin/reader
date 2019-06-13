@@ -11,12 +11,12 @@ import 'package:chianEducation/common/StringUtil.dart';
 class SplashPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return null;
+    return new _SplashPageState();
   }
 }
 
-class _SplashPageState extends State<SplashPage> implements OnSkipClickListener {
+class _SplashPageState extends State<SplashPage>
+    implements OnSkipClickListener {
   var welcomeImageUrl = '';
 
   @override
@@ -33,25 +33,32 @@ class _SplashPageState extends State<SplashPage> implements OnSkipClickListener 
       children: <Widget>[
         new Container(
           color: Colors.white,
-          child: new Image.network(welcomeImageUrl,
+          child: new Image.network(
+            welcomeImageUrl,
             fit: BoxFit.cover,
           ),
           constraints: new BoxConstraints.expand(),
         ),
         new Image.asset(
-          'images/logo.png',
+          'images/logo.jpg',
           fit: BoxFit.fitWidth,
         ),
         new Container(
           child: Align(
             alignment: Alignment.topRight,
             child: new Container(
-              padding: const EdgeInsets.only(top: 30.0,right: 20),
-              child: new SkipDownTimeProgress(Colors.red, 22.0, new Duration(seconds: 5), new Size(25.0, 25.0),skipText: "跳过",onSkipClickListener: this,),
+              padding: const EdgeInsets.only(top: 30.0, right: 20),
+              child: new SkipDownTimeProgress(
+                Colors.red,
+                22.0,
+                new Duration(seconds: 5),
+                new Size(25.0, 25.0),
+                skipText: "跳过",
+                onSkipClickListener: this,
+              ),
             ),
           ),
         )
-
       ],
     );
   }
@@ -60,27 +67,30 @@ class _SplashPageState extends State<SplashPage> implements OnSkipClickListener 
    * 加载启动图从网络
    */
   _getWelcomImage() async {
-    var url = Api.makeUrl('services/app_ad_cover.json', null);
-    var httpClient = new HttpClient();
-    String result;
-    var request = await httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    if (response.statusCode == HttpStatus.ok) {
-      var json = await response.transform(utf8.decoder).join();
-      List data = jsonDecode(json);
-      String cover;
-      for (var item in data) {
-        cover = item['field_app_ad_cover'];
-        if (cover != null && cover.isNotEmpty) {
-          cover = StringUtil.getSrcImagePath(cover);
-          break;
+    try {
+      var url = Api.makeUrl('services/app_ad_cover.json', null);
+      var httpClient = new HttpClient();
+      var request = await httpClient.getUrl(Uri.parse(url));
+      var response = await request.close();
+      if (response.statusCode == HttpStatus.ok) {
+        var json = await response.transform(utf8.decoder).join();
+        List data = jsonDecode(json);
+        String cover;
+        for (var item in data) {
+          cover = item['field_app_ad_cover'];
+          if (cover != null && cover.isNotEmpty) {
+            cover = StringUtil.getSrcImagePath(cover);
+            break;
+          }
         }
-      }
 
-      print('cover======$cover');
-      setState(() {
-        welcomeImageUrl = cover;
-      });
+        print('cover======$cover');
+        setState(() {
+          welcomeImageUrl = cover;
+        });
+      }
+    } catch (e) {
+      print('网络请求错误：$e');
     }
   }
 
@@ -93,8 +103,9 @@ class _SplashPageState extends State<SplashPage> implements OnSkipClickListener 
   /**
    * 去首页
    */
-  _goHomePage(){
-    Navigator.pushNamed(context, '/');
+  _goHomePage() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/main', (Route<dynamic> route) => false);
   }
 
   @override

@@ -2,7 +2,7 @@ class StringUtil{
   static List<String> matchImageSrc(String srcImageStr){
     List<String> result=[];
     ///这个是正则的方法
-    RegExp exp=new RegExp(r"<(img|IMG)(.*?)(/>|></imag>)>");
+    RegExp exp=new RegExp(r"<(img|IMG)(.*?)(/>|></imag>|>)");
     for(var item in exp.allMatches(srcImageStr)){
       String strImg=item.group(2);
       print('strImg == $strImg');
