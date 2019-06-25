@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'DrawProgress.dart';
 
-///
 ///在启动页显"跳过"的控件
-///
 class SkipDownTimeProgress extends StatefulWidget{
 
   final Color color;
   final double radius;
   final Duration duration;//这是一个类似定时器
   final Size size;
-  String skipText;
-  OnSkipClickListener onSkipClickListener;
+  final String skipText;
+  final OnSkipClickListener onSkipClickListener;
 
 
   SkipDownTimeProgress(this.color,this.radius,this.duration,this.size,
   {
-    Key key,this.skipText="跳过",OnSkipClickListener this.onSkipClickListener
+    Key key,this.skipText="跳过",this.onSkipClickListener
   }):super(key:key);
 
   @override

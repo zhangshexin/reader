@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:chianEducation/widget/SkipDownTimeProgress.dart';
 import 'package:chianEducation/Api.dart';
 import 'package:chianEducation/common/StringUtil.dart';
+import 'dart:core';
 
-/**
- * 启动页
- */
+///启动页
 class SplashPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -63,9 +62,7 @@ class _SplashPageState extends State<SplashPage>
     );
   }
 
-  /**
-   * 加载启动图从网络
-   */
+ ///加载启动图从网络
   _getWelcomImage() async {
     try {
       var url = Api.makeUrl('services/app_ad_cover.json', null);
@@ -100,9 +97,7 @@ class _SplashPageState extends State<SplashPage>
     });
   }
 
-  /**
-   * 去首页
-   */
+  ///去首页
   _goHomePage() {
     Navigator.pushNamedAndRemoveUntil(
         context, '/main', (Route<dynamic> route) => false);

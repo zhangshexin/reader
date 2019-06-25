@@ -1,5 +1,5 @@
 class Api{
-  static String App_Host_URL='http://www.wsrtv.com.cn';
+  static const String  App_Host_URL='http://www.wsrtv.com.cn';
 
   static String makeUrl(String page,List<String> params){
     String url=App_Host_URL;

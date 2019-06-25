@@ -12,10 +12,8 @@ class DrawProgress extends CustomPainter{
   Paint progressPaint;
   Rect rect;
 
-  /**
-   * 花括号中的是可选参数
-   */
-  DrawProgress(this.color,this.radius,{double this.angle,AnimationController this.animationController}){
+  ///花括号中的是可选参数
+  DrawProgress(this.color,this.radius,{this.angle,this.animationController}){
     circleFillPaint=new Paint();
     circleFillPaint.color=Colors.white;
     circleFillPaint.style=PaintingStyle.fill;
