@@ -120,6 +120,7 @@ public class Activity_specialList extends BaseActivity {
 
         //展示管理员操作按钮
         if (isAdmin) {
+            binding.title.titleRight.setVisibility(View.VISIBLE);
             //右上角"新增"按钮
             binding.title.titleRight.setText("新增专题");
             binding.title.titleRight.setOnClickListener(new View.OnClickListener() {

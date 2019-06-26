@@ -50,6 +50,11 @@ public class Activity_special_editer extends BaseActivity implements View.OnClic
             special = (Special) getIntent().getSerializableExtra("special");
         else
             special = new Special();
+
+        //这里要处理一下，如果specialId为0说明是还未创建的专题，不可以进行创建考题
+        if(special.getId()==0)
+            binding.specialToAddQuestions.setVisibility(View.GONE);
+
         binding.setSpecial(special);
         binding.setAct(this);
 

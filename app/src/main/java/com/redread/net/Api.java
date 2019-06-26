@@ -19,7 +19,7 @@ import okhttp3.RequestBody;
  */
 
 public class Api {
-    public static final String baseUrl = "http://172.16.47.121:8080";//这里填服务器的地址，不要用localhost或127.0.0.1
+    public static final String baseUrl = "http://172.16.47.205:8080";//这里填服务器的地址，不要用localhost或127.0.0.1
 
     /**
      * 普通登录
