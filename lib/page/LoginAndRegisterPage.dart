@@ -16,6 +16,7 @@ class LoginAndRegisterPage extends StatefulWidget {
 
 class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
   final _formkey = GlobalKey<FormState>(); //
+  var _scaffoldkey = GlobalKey<ScaffoldState>();
   String _email, _password;
   bool _isObscure = true;
   Color _eyeColor;
@@ -26,10 +27,11 @@ class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
+          key: _scaffoldkey,
           body: Form(
-        key: _formkey,
-        child: body,
-      )),
+            key: _formkey,
+            child: body,
+          )),
       onWillPop: () {
         //不让退出
         debugPrint('不让退出------');
@@ -215,35 +217,37 @@ class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
       debugPrint('访问的url:$uri');
       var request = await httpClient.postUrl(uri);
       var response = await request.close();
-      if(response.statusCode==HttpStatus.ok){
-        var json=await response.transform(utf8.decoder).join();
+      if (response.statusCode == HttpStatus.ok) {
+        var json = await response.transform(utf8.decoder).join();
         debugPrint('json数据：$json');
         //处理并保存一下数据
-        Map<String,dynamic> map=jsonDecode(json);
-        if(map['code']==200){
+        Map<String, dynamic> map = jsonDecode(json);
+        if (map['code'] == 200) {
           //保存
-          String userInfo=map['result'].toString();
+          String userInfo = map['result'].toString();
           debugPrint('userinfo====$userInfo');
-          await PreferenceUtil().setPrefString(PreferenceUtil.KEY_USER_JSON, userInfo);
-        }else{
-          String msg=map['msg'];
-          _showSnackBar(context, msg);
+          await PreferenceUtil()
+              .setPrefString(PreferenceUtil.KEY_USER_JSON, userInfo);
+        } else {
+          String msg = map['msg'];
+          _showSnackBar(msg: msg);
         }
-      }else{
+      } else {
         debugPrint('凉凉了^^^^');
+        _showSnackBar();
       }
     } catch (e) {
-      _showSnackBar(context, '网络出现异常，稍后再试');
+      _showSnackBar();
       print('出错了啊====$e');
     }
   }
 
-  _showSnackBar(BuildContext context,String msg){
-    if(msg==null||msg.isEmpty)
-      msg='再试试吧！';
-    Scaffold.of(context).showSnackBar(SnackBar(
+  _showSnackBar({String msg}) {
+    if (msg == null || msg.isEmpty) msg = '网络出现异常，稍后再试';
+    _scaffoldkey.currentState.showSnackBar(SnackBar(
       content: Text(msg),
-      action: SnackBarAction(label: 'ok', onPressed: () {}),
+      duration: Duration(seconds: 1),
+//      action: SnackBarAction(label: 'ok', onPressed: () {}),//打开后需要点击才消失
     ));
   }
 }
