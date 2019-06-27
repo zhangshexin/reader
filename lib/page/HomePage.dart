@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); //销毁
   }
-
+bool _pushedLoginPage=false;
   ///创建期: initState
   ///
   ///进入后台: inactive -> paused
@@ -61,7 +61,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     json.then((String value){
       debugPrint('哦哦=========$value');
       if(value==null||value.isEmpty){
-        Navigator.pushNamed(context, AppRoutes.LOGIN_REGISTER_PAGE);
+        if(!_pushedLoginPage){
+          Navigator.pushNamed(context, AppRoutes.LOGIN_REGISTER_PAGE);
+          setState(() {
+            _pushedLoginPage=true;
+          });
+        }
       }
       else{
         //根据用户角色admin/consumer来显示不用界面
