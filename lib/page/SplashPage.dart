@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:chianEducation/widget/SkipDownTimeProgress.dart';
 import 'package:chianEducation/Api.dart';
 import 'package:chianEducation/common/StringUtil.dart';
-import 'dart:core';
 
 ///启动页
 class SplashPage extends StatefulWidget {
