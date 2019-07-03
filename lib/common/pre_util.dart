@@ -18,8 +18,8 @@ class PreferenceUtil {
   }
 
   ///清空数据
-  cleanAll() async {
+  Future<bool> cleanAll() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.clear();
+    return preferences.clear();
   }
 }

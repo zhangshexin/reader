@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:chianEducation/common/pre_util.dart';
 import 'package:chianEducation/AppRoutes.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -14,6 +15,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _counter = 0;
+
+  UserModel _userModel;
 
   void _incrementCounter() {
     setState(() {
@@ -36,7 +39,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); //销毁
   }
-bool _pushedLoginPage=false;
+
+  bool _pushedLoginPage = false;
+
   ///创建期: initState
   ///
   ///进入后台: inactive -> paused
@@ -57,21 +62,37 @@ bool _pushedLoginPage=false;
   ///检查是否已登录
   _checkUserStatus() {
     //在这里判断一下是否已登录，否则跳转到登录页
-    Future<String> json = PreferenceUtil().getPrefString(PreferenceUtil.KEY_USER_JSON);
-    json.then((String value){
+    Future<String> json =
+        PreferenceUtil().getPrefString(PreferenceUtil.KEY_USER_JSON);
+    json.then((String value) {
       debugPrint('哦哦=========$value');
-      if(value==null||value.isEmpty){
-        if(!_pushedLoginPage){
-          Navigator.pushNamed(context, AppRoutes.LOGIN_REGISTER_PAGE);
+      if (value == null || value.isEmpty) {
+        if (!_pushedLoginPage) {
+          Navigator.pushNamed(context, AppRoutes.LOGIN_REGISTER_PAGE)
+              .then((userInfo) {
+            if (userInfo != null) {
+              String info = userInfo;
+              //根据用户角色admin/consumer来显示不用界面
+              Map<String, dynamic> json = jsonDecode(info);
+              setState(() {
+                _userModel = UserModel.fromJson(json);
+                print('用户信息:$_userModel');
+              });
+            }
+          });
           setState(() {
-            _pushedLoginPage=true;
+            _pushedLoginPage = true;
           });
         }
-      }
-      else{
+      } else {
         //根据用户角色admin/consumer来显示不用界面
+        Map<String, dynamic> json = jsonDecode(value);
+        setState(() {
+          _userModel = UserModel.fromJson(json);
+          print('用户信息:$_userModel');
+        });
       }
-    }).catchError((Object error){
+    }).catchError((Object error) {
       debugPrint('出错了$error');
     });
   }
@@ -81,6 +102,20 @@ bool _pushedLoginPage=false;
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        actions: <Widget>[
+          _userModel.role == 'admin'
+              ? RaisedButton(
+                  onPressed: () {
+                    //添加新的专题
+                  },
+                  child: Text(
+                    '添加专题',
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                  shape: StadiumBorder(side: BorderSide()),
+                )
+              : null
+        ],
       ),
       drawer: _drawer,
       body: new Center(
@@ -103,6 +138,12 @@ bool _pushedLoginPage=false;
     );
   }
 
+
+  ///加载专题列表
+  ListView _loadSpecialList(BuildContext context){
+
+  }
+
   get _drawer => Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -110,18 +151,60 @@ bool _pushedLoginPage=false;
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.lightBlueAccent),
               child: Center(
-                child: SizedBox(
-                  width: 60.0,
-                  height: 60.0,
-                  child: CircleAvatar(
-                    child: Text('R'),
+                  child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 30),
                   ),
-                ),
-              ),
+                  SizedBox(
+                    width: 60.0,
+                    height: 60.0,
+                    child: CircleAvatar(
+                      child: Text(
+                          _userModel == null ? 'R' : _userModel.phoneNumber),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15),
+                  ),
+                  Center(
+                    child: Text(
+                      '[' +
+                          (_userModel == null ? 'role' : _userModel.role) +
+                          ']',
+                      style: TextStyle(fontSize: 12, color: Colors.yellow),
+                    ),
+                  )
+                ],
+              )),
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('设置'),
+            Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text('退出登录',
+                    style: TextStyle(fontSize: 24, color: Colors.red)),
+                onTap: () {
+                  print('按了一下,清理数据跳转登录页');
+                  PreferenceUtil().cleanAll().then((result) {
+                    if (result) {
+                      Navigator.pushNamed(
+                              context, AppRoutes.LOGIN_REGISTER_PAGE)
+                          .then((userInfo) {
+                        if (userInfo != null) {
+                          String info = userInfo;
+                          //根据用户角色admin/consumer来显示不用界面
+                          Map<String, dynamic> json = jsonDecode(info);
+                          setState(() {
+                            _userModel = UserModel.fromJson(json);
+                            print('用户信息:$_userModel');
+                          });
+                        }
+                      });
+                    }
+                  });
+                },
+              ),
             )
           ],
         ),
@@ -130,9 +213,9 @@ bool _pushedLoginPage=false;
 
 ///用户信息
 class UserModel {
-  final int id;
-  final String phoneNumber;
-  final String role;
+  int id;
+  String phoneNumber;
+  String role;
 
   UserModel({this.id, this.phoneNumber, this.role});
 

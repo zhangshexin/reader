@@ -22,6 +22,7 @@ class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
   Color _eyeColor;
 
   bool _isLogin = true;
+  bool _isSuccess=false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
             key: _formkey,
             child: body,
           )),
-      onWillPop: () {
+      onWillPop:_isSuccess?null: () {
         //不让退出
         debugPrint('不让退出------');
       },
@@ -224,10 +225,15 @@ class _LoginAndRegisterPageState extends State<LoginAndRegisterPage> {
         Map<String, dynamic> map = jsonDecode(json);
         if (map['code'] == 200) {
           //保存
-          String userInfo = map['result'].toString();
+          Map<String,dynamic> result=map['result'];
+          String userInfo = jsonEncode(result);
           debugPrint('userinfo====$userInfo');
           await PreferenceUtil()
               .setPrefString(PreferenceUtil.KEY_USER_JSON, userInfo);
+          setState(() {
+            _isSuccess=true;
+          });
+          Navigator.pop(context,userInfo);
         } else {
           String msg = map['msg'];
           _showSnackBar(msg: msg);
