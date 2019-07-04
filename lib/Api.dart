@@ -48,4 +48,9 @@ class Api {
   static Uri registerPost(String phoneNum,String pwd){
     return Uri(scheme:API_SCHEME,host: API_HOST,port:PORT,path: '/ucenter/register',queryParameters:{'phoneNum':phoneNum,'pwd':pwd});
   }
+
+  ///取专题列表
+  static Uri specialListGet(int pageNum,int pageSize,int status){
+    return Uri(scheme: API_SCHEME,host: API_HOST,port: PORT,path:'/special/list',query: 'pageNum=$pageNum&pageSize=$pageSize&status=$status' );
+  }
 }

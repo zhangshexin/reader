@@ -3,6 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:chianEducation/common/pre_util.dart';
 import 'package:chianEducation/AppRoutes.dart';
 import 'dart:convert';
+import 'package:chianEducation/Api.dart';
+import 'dart:io';
+import 'package:chianEducation/page/bean/SpecialBean.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -14,6 +17,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  //专题列表的数据------------
+  final int _pageSize = 20;
+  final int _status = 1;
+  int _pageNumber = 1;
+  SpecialResult _specialResult;
+
+  //------------
   int _counter = 0;
 
   UserModel _userModel;
@@ -31,6 +41,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this); //添加观察者
     print('这是初始华啊8888888888');
     _checkUserStatus();
+    _getSpecialListData();
   }
 
   @override
@@ -104,44 +115,74 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         title: new Text(widget.title),
         actions: <Widget>[
           _userModel.role == 'admin'
-              ? RaisedButton(
+              ? IconButton(
                   onPressed: () {
                     //添加新的专题
+                    _goSpecialEditPage(context, null);
                   },
-                  child: Text(
-                    '添加专题',
-                    style: TextStyle(fontSize: 15, color: Colors.black),
-                  ),
-                  shape: StadiumBorder(side: BorderSide()),
+                  icon: new Icon(Icons.add),
                 )
-              : null
+              : Text('')
         ],
       ),
       drawer: _drawer,
       body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text('你点的次数：'),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: '自增',
-        child: new Icon(Icons.add),
+        child: _loadSpecialList(context),
       ),
     );
   }
 
-
   ///加载专题列表
-  ListView _loadSpecialList(BuildContext context){
+  ListView _loadSpecialList(BuildContext context) {
+    return ListView.builder(
+        itemCount: _specialResult == null ? 0 : _specialResult.list.length,
+        itemBuilder: (BuildContext context, int position) {
+          return new ListTile(
+            trailing:_userModel.role=='admin'? IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  debugPrint('我点了一下');
+                  _goSpecialEditPage(context, _specialResult.list[position].id);
+                }):null,
+            title: Text(_specialResult.list[position].specialName),
+            subtitle: Text(_specialResult.list[position].specialDes),
+          );
+        });
+  }
 
+  ///加载专题列表数据
+  _getSpecialListData() async {
+    try {
+      Uri uri = Api.specialListGet(_pageNumber, _pageSize, _status);
+      debugPrint('get专题列表uri:$uri');
+      var httpclient = HttpClient();
+      var request = await httpclient.getUrl(uri);
+      var response = await request.close();
+      if (response.statusCode == HttpStatus.ok) {
+        var json = await response.transform(utf8.decoder).join();
+        debugPrint('get专题列表：$json');
+        Map<String, dynamic> result = jsonDecode(json);
+        if (result['code'] == 200) {
+          setState(() {
+            _specialResult = SpecialResult.fromJson(result['result']);
+          });
+          debugPrint('special list:' + jsonEncode(result['result']));
+        } else {
+          //弹出提示
+          debugPrint('数据正常访问返回失败');
+        }
+      } else {
+        debugPrint('get专题列表凉了：$response');
+      }
+    } catch (e) {
+      debugPrint('get专题列表：$e');
+    }
+  }
+
+  ///去专题编辑页，如果参数为空就是新增专题
+  _goSpecialEditPage(BuildContext context, int content) {
+    Navigator.pushNamed(context, AppRoutes.SPECIAL_EDIT_PAGE,
+        arguments: content);
   }
 
   get _drawer => Drawer(
