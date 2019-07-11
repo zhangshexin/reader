@@ -33,8 +33,8 @@ class Api {
   }
 
   ///api 地址
-//  static const String API_HOST = '172.16.47.205';
-  static const String API_HOST = '192.168.50.103';
+  static const String API_HOST = '172.16.47.205';//wifi
+//  static const String API_HOST = '192.168.50.103';//有线
 
   static const String API_SCHEME='http';
   static const int PORT=8080;
